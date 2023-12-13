@@ -1,18 +1,34 @@
 package com.example.aplicacionaemet.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.example.aplicacionaemet.Controller.MainController;
+import com.example.aplicacionaemet.Controller.TiempoAdapter;
+import com.example.aplicacionaemet.Model.Tiempo;
 import com.example.aplicacionaemet.R;
 
 import java.lang.reflect.Array;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private LinkedList<Tiempo> mList = new LinkedList<>();
+
+    private RecyclerView mRecyclerView;
+
+    private TiempoAdapter mAdapter;
+
     private Spinner spinner;
+
+    private static MainActivity myActiveActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +36,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setupSpinner();
+
+        mRecyclerView = findViewById(R.id.rv_tiempo);
+
+        mAdapter = new TiempoAdapter(this, mList);
+
+        mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
     }
 
     private void setupSpinner() {
@@ -35,5 +61,21 @@ public class MainActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item, localidadesArray);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+    }
+
+    public void accessData() {
+
+        List<Tiempo> lista = MainController.getSingleton().getDataFromHttp();
+
+        mList.clear();
+        for (Tiempo tiempo : lista) {
+            mList.add(tiempo);
+        }
+
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public void errorData(String error) {
+
     }
 }

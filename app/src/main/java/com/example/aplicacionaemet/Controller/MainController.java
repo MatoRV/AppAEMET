@@ -33,13 +33,23 @@ public class MainController {
     }
 
     // Es llamado en el View
-    public void requestDataFromHttp() {
+    public void requestDataFromHttp(String municipio) {
         Peticion p = new Peticion();
-        p.requestData(URL);
+        p.requestData(URL, municipio);
     }
 
     // Es llamado cuando onResponse está correcto
     public void setDataFromHttp(String json) {
+        Respuesta r = new Respuesta(json);
+        dataRequested = r.getTiempoData();
+        MainController.activeActivity.accessData();
+    }
 
+    public void setErrorFromHttp(String error) {
+        MainController.activeActivity.errorData(error);
+    }
+
+    public static void setActivity(MainActivity myAct) {
+        activeActivity = myAct;
     }
 }

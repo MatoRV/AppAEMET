@@ -86,8 +86,9 @@ public class Respuesta {
             } else {
                 imgTiempo = R.drawable.weather_lightning_rainy;
             }
-
+            dataList.add(new Tiempo(imgTiempo,fecha,tempMax,tempMin));
         }
 
+        return dataList;
     }
 }
