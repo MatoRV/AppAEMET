@@ -1,6 +1,8 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Aplicacion AEMET</string>
     <string name="localidad">Localidad</string>
+    <string name="maxima">Máxima:</string>
+    <string name="minima">Minima:</string>
     <string-array name="localidades_data">
         <item>;01;051;Agurain/Salvatierra;</item>
         <item>;01;001;Alegría-Dulantzi;</item>
@@ -155,7 +157,7 @@
         <item>;03;013;Algueña;</item>
         <item>;03;015;Almoradí;</item>
         <item>;03;016;Almudaina;</item>
-        <item>;03;017;Alqueria d\'Asnar, l';</item>
+        <item>;03;017;Alqueria d\'Asnar, l\';</item>
         <item>;03;018;Altea;</item>
         <item>;03;019;Aspe;</item>
         <item>;03;001;Atzúbia, l\';</item>
@@ -2623,7 +2625,7 @@
         <item>;17;903;Sant Julià del Llor i Bonmatí;</item>
         <item>;17;171;Sant Llorenç de la Muga;</item>
         <item>;17;172;Sant Martí de Llémena;</item>
-        <item>;17;173;Sant Martí Vell;</item>
+        <item tools:ignore="Typos">;17;173;Sant Martí Vell;</item>
         <item>;17;174;Sant Miquel de Campmajor;</item>
         <item>;17;175;Sant Miquel de Fluvià;</item>
         <item>;17;176;Sant Mori;</item>
@@ -6529,7 +6531,7 @@
         <item>;43;159;Vallfogona de Riucorb;</item>
         <item>;43;160;Vallmoll;</item>
         <item>;43;161;Valls;</item>
-        <item>;43;162;Vandellòs i l\'Hospitalet de l'Infant;</item>
+        <item>;43;162;Vandellòs i l\'Hospitalet de l\'Infant;</item>
         <item>;43;163;Vendrell, El;</item>
         <item>;43;164;Vespella de Gaià;</item>
         <item>;43;165;Vilabella;</item>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="6dp"
+    android:orientation="horizontal">
+    
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        tools:ignore="Suspicious0dp" />
+    <TextView
+        style="@style/lista_tiempo"
+        android:id="@+id/tv_dia"/>
+
+    <TextView
+        style="@style/lista_tiempo"
+        android:id="@+id/tv_tempMax"
+        android:text="@string/maxima"/>
+
+    <TextView
+        style="@style/lista_tiempo"
+        android:id="@+id/tv_tempMin"
+        android:text="@string/minima"/>
+
+</LinearLayout>
