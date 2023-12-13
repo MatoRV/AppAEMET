@@ -1,7 +1,12 @@
 package com.example.aplicacionaemet.Controller;
 
+import android.graphics.drawable.Drawable;
+
 import com.example.aplicacionaemet.Model.Tiempo;
+import com.example.aplicacionaemet.R;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.LinkedList;
@@ -15,10 +20,65 @@ public class Respuesta {
         datos = entrada;
     }
 
+    public String getUrlData() {
+        
+        String datosEnlace = null;
+
+        // Parsea el JSON a un objeto JsonObject
+        JsonObject jsonObject = JsonParser.parseString(this.datos).getAsJsonObject();
+
+        // Obtiene el elemento datos
+        JsonElement datosElm = jsonObject.get("datos");
+        
+        // Verifica si es distinto de nulo
+        if (datosElm != null) {
+            datosEnlace = datosElm.getAsString();
+        }
+        
+        return datosEnlace;
+    }
+
     public List<Tiempo> getTiempoData() {
 
         LinkedList<Tiempo> dataList = new LinkedList<>();
 
-        JsonElement jsonElement = JsonParser.parseString(this.datos);
+        JsonElement jsonElement = JsonParser.parseString(getUrlData());
+
+        JsonObject jsonObject = jsonElement.getAsJsonObject().get("prediccion").getAsJsonObject();
+
+        JsonArray diasArray = jsonObject.getAsJsonArray("dia");
+
+        for (JsonElement dia : diasArray) {
+
+            String valorCielo = "0";
+
+            int imgTiempo = 0;
+            // Obtiene estadoCielo
+            JsonArray estadoCieloArray = dia.getAsJsonObject().getAsJsonArray("estadoCielo");
+
+            if (estadoCieloArray.size() > 0) {
+                JsonObject estadoCielo = estadoCieloArray.get(0).getAsJsonObject();
+
+                valorCielo = estadoCielo.get("value").getAsString();
+            }
+
+            if (Integer.parseInt(valorCielo) == 0) {
+                imgTiempo = R.drawable.weather_sunny;
+            } else if (Integer.parseInt(valorCielo) > 11 && Integer.parseInt(valorCielo) <= 16) {
+                imgTiempo = R.drawable.weather_partly_cloudy;
+            } else if (Integer.parseInt(valorCielo) > 16 && Integer.parseInt(valorCielo) <= 24) {
+                imgTiempo = R.drawable.weather_cloudy;
+            } else if (Integer.parseInt(valorCielo) > 24 && Integer.parseInt(valorCielo) <= 43) {
+                imgTiempo = R.drawable.weather_rainy;
+            } else if (Integer.parseInt(valorCielo) > 43 && Integer.parseInt(valorCielo) <= 65) {
+                imgTiempo = R.drawable.weather_pouring;
+            } else {
+                imgTiempo = R.drawable.weather_lightning_rainy;
+            }
+
+            JsonArray temperaturaArray = dia.getAsJsonObject().getAsJsonArray();
+
+        }
+
     }
 }

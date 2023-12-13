@@ -4,7 +4,7 @@ import android.graphics.drawable.Drawable;
 
 public class Tiempo {
 
-    private Drawable tiempo;
+    private int tiempo;
 
     private String dia;
 
@@ -12,14 +12,14 @@ public class Tiempo {
 
     private String tempMin;
 
-    public Tiempo(Drawable tiempo, String dia, String tempMax, String tempMin) {
+    public Tiempo(int tiempo, String dia, String tempMax, String tempMin) {
         this.tiempo = tiempo;
         this.dia = dia;
         this.tempMax = tempMax;
         this.tempMin = tempMin;
     }
 
-    public Drawable getTiempo() {
+    public int getTiempo() {
         return tiempo;
     }
 

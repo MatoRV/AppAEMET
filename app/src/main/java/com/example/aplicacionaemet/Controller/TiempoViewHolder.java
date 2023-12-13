@@ -32,8 +32,8 @@ public class TiempoViewHolder extends RecyclerView.ViewHolder {
         this.mAdapter = adapter;
     }
 
-    public void setIvTiempo(Drawable data) {
-        ivTiempo.setImageDrawable(data);
+    public void setIvTiempo(int data) {
+        ivTiempo.setImageResource(data);
     }
 
     public void setTvDia(String data) {
