@@ -9,6 +9,7 @@
     <ImageView
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:id="@+id/img_tiempo"
         tools:ignore="Suspicious0dp" />
     <TextView
         style="@style/lista_tiempo"
