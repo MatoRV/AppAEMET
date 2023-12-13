@@ -16,6 +16,10 @@ import okhttp3.internal.http2.Http2Reader;
 
 public class Peticion {
 
+    private static final String API_KEY = "?api_key=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aWN0b3JtYXRvcjVAZ21haWwuY29tIiwianRpIjoiMTdkZTUwNzYtNzEwMy00MzcyLTkyYWItYzEyM2FlYzcxMzZhIiwiaXNzIjoiQUVNRVQiLCJpYXQiOjE3MDEzNzMyOTcsInVzZXJJZCI6IjE3ZGU1MDc2LTcxMDMtNDM3Mi05MmFiLWMxMjNhZWM3MTM2YSIsInJvbGUiOiIifQ.rBKbaWEEK3tA7ponxThxFTWGDvJPiRgE5m25fbwsv1Q";
+
+    private String municipio;
+
     public Peticion() {
 
     }
@@ -24,7 +28,7 @@ public class Peticion {
         OkHttpClient cliente = new OkHttpClient();
         // Construye la peticion
         Request peticion = new Request.Builder()
-                .url(URL)
+                .url(URL + municipio + API_KEY)
                 .get()
                 .addHeader("cache-control","no-cache")
                 .build();
