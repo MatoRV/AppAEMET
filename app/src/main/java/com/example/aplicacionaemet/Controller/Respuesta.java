@@ -40,6 +40,10 @@ public class Respuesta {
 
     public List<Tiempo> getTiempoData() {
 
+        String valorCielo = "0";
+        String tempMax = "0";
+        String tempMin = "0";
+
         LinkedList<Tiempo> dataList = new LinkedList<>();
 
         JsonElement jsonElement = JsonParser.parseString(getUrlData());
@@ -50,16 +54,23 @@ public class Respuesta {
 
         for (JsonElement dia : diasArray) {
 
-            String valorCielo = "0";
+
 
             int imgTiempo = 0;
             // Obtiene estadoCielo
             JsonArray estadoCieloArray = dia.getAsJsonObject().getAsJsonArray("estadoCielo");
-
+            JsonArray temperaturaArray = dia.getAsJsonObject().getAsJsonArray("temperatura");
+            String fecha = dia.getAsJsonObject().get("fecha").getAsString();
             if (estadoCieloArray.size() > 0) {
                 JsonObject estadoCielo = estadoCieloArray.get(0).getAsJsonObject();
-
                 valorCielo = estadoCielo.get("value").getAsString();
+            }
+
+            if (temperaturaArray.size() > 0) {
+                JsonObject temperaturaMax = temperaturaArray.get(0).getAsJsonObject();
+                JsonObject temperaturaMin = temperaturaArray.get(1).getAsJsonObject();
+                tempMax = temperaturaMax.get("maxima").getAsString();
+                tempMin = temperaturaMin.get("minima").getAsString();
             }
 
             if (Integer.parseInt(valorCielo) == 0) {
@@ -75,8 +86,6 @@ public class Respuesta {
             } else {
                 imgTiempo = R.drawable.weather_lightning_rainy;
             }
-
-            JsonArray temperaturaArray = dia.getAsJsonObject().getAsJsonArray();
 
         }
 
