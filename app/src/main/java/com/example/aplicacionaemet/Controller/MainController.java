@@ -14,6 +14,8 @@ public class MainController {
 
     private List<Tiempo> dataRequested;
 
+    private String enlace;
+
     private static MainActivity activeActivity;
 
     private MainController() {
@@ -28,8 +30,8 @@ public class MainController {
     }
 
     // Envia los datos al View
-    public List<Tiempo> getDataFromHttp() {
-        return this.dataRequested;
+    public String getDataFromHttp() {
+        return this.enlace;
     }
 
     // Es llamado en el View
@@ -41,7 +43,7 @@ public class MainController {
     // Es llamado cuando onResponse está correcto
     public void setDataFromHttp(String json) {
         Respuesta r = new Respuesta(json);
-        dataRequested = r.getTiempoData();
+        enlace = r.getUrlData();
         MainController.activeActivity.accessData();
     }
 

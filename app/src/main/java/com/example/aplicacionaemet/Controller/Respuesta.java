@@ -21,7 +21,7 @@ public class Respuesta {
     }
 
     public String getUrlData() {
-        
+
         String datosEnlace = null;
 
         // Parsea el JSON a un objeto JsonObject
@@ -29,12 +29,12 @@ public class Respuesta {
 
         // Obtiene el elemento datos
         JsonElement datosElm = jsonObject.get("datos");
-        
+
         // Verifica si es distinto de nulo
         if (datosElm != null) {
             datosEnlace = datosElm.getAsString();
         }
-        
+
         return datosEnlace;
     }
 
@@ -46,7 +46,7 @@ public class Respuesta {
 
         LinkedList<Tiempo> dataList = new LinkedList<>();
 
-        JsonElement jsonElement = JsonParser.parseString(getUrlData());
+        JsonElement jsonElement = JsonParser.parseString(this.datos);
 
         JsonObject jsonObject = jsonElement.getAsJsonObject().get("prediccion").getAsJsonObject();
 

@@ -42,14 +42,23 @@ public class Peticion {
                 manejador.post(new Runnable() {
                     @Override
                     public void run() {
-
+                        MainController.getSingleton().setDataFromHttp("");
+                        MainController.getSingleton().setErrorFromHttp(respuesta);
                     }
                 });
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String respuesta = response.body().string();
+                Handler manejador = new Handler(Looper.getMainLooper());
 
+                manejador.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        MainController.getSingleton().setDataFromHttp(respuesta);
+                    }
+                });
             }
         });
     }

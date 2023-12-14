@@ -5,6 +5,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -28,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Spinner spinner;
 
+    private String[] stringArray;
+
     private static MainActivity myActiveActivity;
 
     @Override
@@ -45,12 +49,36 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String seleccionado = (String) spinner.getItemAtPosition(position);
+                stringArray = getResources().getStringArray(R.array.localidades_data);
+                String cp,cm,municipio = null;
+                for (int i = 0; i < stringArray.length; i++) {
+                    if (stringArray[i].split(";")[3].equals(seleccionado)) {
+                        cp = stringArray[i].split(";")[1];
+                        cm = stringArray[i].split(";")[2];
+                        municipio = cp + cm;
+                        break;
+                    }
+                }
+                MainController.getSingleton().requestDataFromHttp(municipio);
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        MainActivity.myActiveActivity = this;
+        MainController.setActivity(this);
     }
 
     private void setupSpinner() {
         spinner = findViewById(R.id.spinner);
-        String[] stringArray = getResources().getStringArray(R.array.localidades_data);
+        stringArray = getResources().getStringArray(R.array.localidades_data);
         String[] localidadesArray = new String[stringArray.length];
         for (int i = 0; i < localidadesArray.length; i++) {
             String linea = stringArray[i];
@@ -65,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void accessData() {
 
-        List<Tiempo> lista = MainController.getSingleton().getDataFromHttp();
+        /*List<Tiempo> lista = MainController.getSingleton().getDataFromHttp();
 
         mList.clear();
         for (Tiempo tiempo : lista) {
@@ -73,9 +101,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mAdapter.notifyDataSetChanged();
+
+         */
+        TextView tv = (TextView) findViewById(R.id.tv_municipio);
+        tv.setText(MainController.getSingleton().getDataFromHttp());
     }
 
     public void errorData(String error) {
-
+        TextView tv = (TextView) findViewById(R.id.tv_municipio);
+        tv.setText(error);
     }
 }
