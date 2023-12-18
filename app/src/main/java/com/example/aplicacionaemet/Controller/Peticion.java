@@ -6,8 +6,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -25,6 +23,9 @@ public class Peticion {
     }
 
     public void requestData(String URL, String municipio) {
+        if (municipio.equals("")) {
+            return;
+        }
         OkHttpClient cliente = new OkHttpClient();
         // Construye la peticion
         Request peticion = new Request.Builder()
@@ -45,11 +46,7 @@ public class Peticion {
                 manejador.post(new Runnable() {
                     @Override
                     public void run() {
-                        try {
-                            MainController.getSingleton().setDataFromHttp("");
-                        } catch (JsonProcessingException ex) {
-                            throw new RuntimeException(ex);
-                        }
+                        MainController.getSingleton().setDataFromHttp("");
                         MainController.getSingleton().setErrorFromHttp("Error" + respuesta);
                     }
                 });
@@ -63,11 +60,7 @@ public class Peticion {
                 manejador.post(new Runnable() {
                     @Override
                     public void run() {
-                        try {
-                            MainController.getSingleton().setDataFromHttp(respuesta);
-                        } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
-                        }
+                        MainController.getSingleton().setDataFromHttp(respuesta);
                         MainController.getSingleton().requestTiempoData(MainController.getSingleton().getDataFromHttp());
                     }
                 });

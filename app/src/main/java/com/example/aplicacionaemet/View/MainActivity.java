@@ -29,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
 
     private String[] stringArray;
 
-    private String municipio;
-
     private EditText editText;
+
+    private TextView textView;
 
     private static MainActivity myActiveActivity;
 
@@ -56,54 +56,15 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        MainController.getSingleton().itemSelected(spinner,stringArray);
+        textView = findViewById(R.id.tv_municipio);
+
+        MainController.getSingleton().itemSelected(spinner,stringArray,textView);
 
         MainController.getSingleton().editTextFiltro(editText, stringArray, spinner);
-
-        /*spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                stringArray = getResources().getStringArray(R.array.localidades_data);
-                String cp,cm;
-                cp = stringArray[position].split(";")[1];
-                cm = stringArray[position].split(";")[2];
-                municipio = cp + cm;
-                Log.d("Peticion","Municipio en Main: "+municipio);
-                MainController.getSingleton().requestDataFromHttp(municipio);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                MainController.getSingleton().requestDataFromHttp(municipio);
-
-            }
-        });
-
-         */
-
 
         MainActivity.myActiveActivity = this;
         MainController.setActivity(this);
     }
-
-    /*private void setupSpinner() {
-        spinner = findViewById(R.id.spinner);
-        stringArray = getResources().getStringArray(R.array.localidades_data);
-        String[] localidadesArray = new String[stringArray.length];
-        for (int i = 0; i < localidadesArray.length; i++) {
-            String linea = stringArray[i];
-            String localidad = linea.split(";")[3];
-            localidadesArray[i] = localidad;
-        }
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, localidadesArray);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-    }
-
-     */
-
-
 
     public void accessData() {
 
@@ -115,8 +76,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mAdapter.notifyDataSetChanged();
-        TextView tv = (TextView) findViewById(R.id.tv_municipio);
-        tv.setText(MainController.getSingleton().getDataFromHttp());
     }
 
     public void errorData(String error) {

@@ -3,13 +3,8 @@
     <string name="localidad">Localidad</string>
     <string name="maxima">Máxima:</string>
     <string name="minima">Minima:</string>
-    <string-array name="localidades_prueba">
-        <item>;01;051;Agurain/Salvatierra;</item>
-        <item>;01;001;Alegría-Dulantzi;</item>
-        <item>;01;002;Amurrio;</item>
-        <item>;01;049;Añana;</item>
-    </string-array>
     <string-array name="localidades_data">
+        <item>;;;Selecciona un municipio;</item>
         <item>;01;051;Agurain/Salvatierra;</item>
         <item>;01;001;Alegría-Dulantzi;</item>
         <item>;01;002;Amurrio;</item>

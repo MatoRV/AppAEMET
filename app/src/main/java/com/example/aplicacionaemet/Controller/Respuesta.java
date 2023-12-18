@@ -1,17 +1,14 @@
 package com.example.aplicacionaemet.Controller;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
-
 import com.example.aplicacionaemet.Model.Tiempo;
 import com.example.aplicacionaemet.R;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -24,27 +21,35 @@ public class Respuesta {
         datos = entrada;
     }
 
-    public String getUrlData() throws JsonProcessingException {
+    public String getUrlData() {
 
         String datosEnlace;
 
-        ObjectMapper om = new ObjectMapper();
+        try {
 
-        JsonNode node = om.readTree(this.datos);
+            ObjectMapper om = new ObjectMapper();
 
-        datosEnlace = node.get("datos").asText();
+            JsonNode node;
+
+            node = om.readTree(this.datos);
+
+
+            datosEnlace = node.get("datos").asText();
+
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
         return datosEnlace;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public List<Tiempo> getTiempoData() {
 
         LinkedList<Tiempo> dataList = new LinkedList<>();
 
         try {
-            DateTimeFormatter fechaRespuesta = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-            DateTimeFormatter fechaADevolver = DateTimeFormatter.ofPattern("EEEE", new Locale("es", "ES"));
+            SimpleDateFormat fechaRespuesta = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
+            SimpleDateFormat fechaADevolver = new SimpleDateFormat("EEEE", new Locale("es", "ES"));
 
             ObjectMapper om = new ObjectMapper();
             JsonNode node = om.readTree(this.datos);
@@ -54,13 +59,13 @@ public class Respuesta {
 
             for (JsonNode dia : dias) {
                 String obtenerFecha = dia.get("fecha").asText();
-                LocalDate fechaObtenida = LocalDate.parse(obtenerFecha, fechaRespuesta);
+                Date fechaObtenida = fechaRespuesta.parse(obtenerFecha);
                 String fecha = fechaADevolver.format(fechaObtenida);
 
                 String estadoCielo = "";
 
                 JsonNode estadoCieloValor = dia.get("estadoCielo");
-                if (estadoCieloValor.isArray() && estadoCieloValor.size() > 0) {
+                if (estadoCieloValor != null && estadoCieloValor.isArray() && estadoCieloValor.size() > 0) {
                     estadoCielo = estadoCieloValor.get(0).get("value").asText();
                 }
 
@@ -86,6 +91,8 @@ public class Respuesta {
                 dataList.add(new Tiempo(imgTiempo,fecha,tempMax,tempMin));
             }
         } catch (JsonProcessingException e) {
+            throw new RuntimeException("Error al procesar JSON: " + e.getMessage());
+        } catch (ParseException e) {
             throw new RuntimeException(e);
         }
 

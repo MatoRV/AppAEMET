@@ -6,45 +6,49 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardUseCompatPadding="true">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/img_tiempo"
             android:layout_width="75dp"
             android:layout_height="75dp"
-            android:scaleType="centerCrop"
-            android:id="@+id/img_tiempo"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_dia"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             style="@style/lista_tiempo"
             android:layout_marginStart="20dp"
             android:textSize="20sp"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:layout_toEndOf="@+id/img_tiempo"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_tempMax"
+            app:layout_constraintStart_toEndOf="@+id/img_tiempo"
             android:id="@+id/tv_dia"/>
 
         <TextView
             style="@style/lista_tiempo"
             android:id="@+id/tv_tempMax"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="20dp"
             android:textSize="15sp"
-            android:layout_toEndOf="@+id/tv_dia"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_dia"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/tv_tempMin"
             android:text="@string/maxima"/>
 
         <TextView
             style="@style/lista_tiempo"
             android:id="@+id/tv_tempMin"
             android:textSize="15sp"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="30dp"
-            android:layout_toEndOf="@+id/tv_tempMax"
+            app:layout_constraintTop_toBottomOf="@+id/tv_tempMax"
+            app:layout_constraintStart_toEndOf="@+id/tv_dia"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:text="@string/minima"/>
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

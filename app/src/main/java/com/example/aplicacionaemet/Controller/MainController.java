@@ -1,7 +1,6 @@
 package com.example.aplicacionaemet.Controller;
 
 import android.content.Context;
-import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -10,12 +9,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-
-import androidx.annotation.RequiresApi;
+import android.widget.TextView;
 
 import com.example.aplicacionaemet.Model.Tiempo;
 import com.example.aplicacionaemet.View.MainActivity;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -45,6 +42,10 @@ public class MainController {
     }
 
     public void setupSpinner(Spinner spinner, String[] array, Context context) {
+        if (array == null || context == null) {
+            return;
+        }
+
         String[] localidadesArray = new String[array.length];
         for (int i = 0; i < localidadesArray.length; i++) {
             String linea = array[i];
@@ -55,15 +56,23 @@ public class MainController {
                 android.R.layout.simple_spinner_item, localidadesArray);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        spinner.setSelection(0,false);
     }
 
-    public void itemSelected(Spinner spinner, String[] array) {
+    public void itemSelected(Spinner spinner, String[] array, TextView textView) {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String cp, cm, municipio;
-                cp = array[i].split(";")[1];
-                cm = array[i].split(";")[2];
+                String cp = "", cm = "", municipio;
+                String seleccion = spinner.getSelectedItem().toString();
+                for (int j = 0; j < array.length; j++) {
+                    if (array[j].split(";")[3].equals(seleccion)) {
+                        cp = array[j].split(";")[1];
+                        cm = array[j].split(";")[2];
+                        break;
+                    }
+                }
+                textView.setText(seleccion);
                 municipio = cp + cm;
                 requestDataFromHttp(municipio);
             }
@@ -95,6 +104,9 @@ public class MainController {
     }
 
     public void filtroSpinner(String textoFiltrado, String[] array, Spinner spinner) {
+        if (array == null) {
+            return;
+        }
         List<String> listaFiltro = new ArrayList<>();
 
         for (String linea : array) {
@@ -123,8 +135,11 @@ public class MainController {
     // Es llamado en el View y trae la id del municipio
     public void requestDataFromHttp(String municipio) {
         Peticion p = new Peticion();
+        if (municipio != null) {
+            p.requestData(URL, municipio);
+        }
         Log.d("Peticion","Municipio: "+municipio);
-        p.requestData(URL, municipio);
+
     }
 
     public void requestTiempoData(String Url) {
@@ -134,14 +149,13 @@ public class MainController {
     }
 
     // Es llamado cuando onResponse está correcto
-    public void setDataFromHttp(String json) throws JsonProcessingException {
+    public void setDataFromHttp(String json) {
         Respuesta r = new Respuesta(json);
         Log.d("Peticion","JSON setDataFromHttp: "+json);
         enlace = r.getUrlData();
-        MainController.activeActivity.accessData();
+
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void setTiempoData(String json) {
         Respuesta r = new Respuesta(json);
         dataRequested = r.getTiempoData();
