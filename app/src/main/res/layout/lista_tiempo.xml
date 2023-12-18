@@ -1,28 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="6dp"
-    android:orientation="horizontal">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardUseCompatPadding="true">
 
-    <ImageView
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:id="@+id/img_tiempo"
-        tools:ignore="Suspicious0dp" />
-    <TextView
-        style="@style/lista_tiempo"
-        android:id="@+id/tv_dia"/>
+        android:layout_height="wrap_content">
 
-    <TextView
-        style="@style/lista_tiempo"
-        android:id="@+id/tv_tempMax"
-        android:text="@string/maxima"/>
+        <ImageView
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:scaleType="centerCrop"
+            android:id="@+id/img_tiempo"/>
 
-    <TextView
-        style="@style/lista_tiempo"
-        android:id="@+id/tv_tempMin"
-        android:text="@string/minima"/>
+        <TextView
+            style="@style/lista_tiempo"
+            android:layout_marginStart="20dp"
+            android:textSize="20sp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_toEndOf="@+id/img_tiempo"
+            android:id="@+id/tv_dia"/>
 
-</LinearLayout>
+        <TextView
+            style="@style/lista_tiempo"
+            android:id="@+id/tv_tempMax"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="20dp"
+            android:textSize="15sp"
+            android:layout_toEndOf="@+id/tv_dia"
+            android:text="@string/maxima"/>
+
+        <TextView
+            style="@style/lista_tiempo"
+            android:id="@+id/tv_tempMin"
+            android:textSize="15sp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="30dp"
+            android:layout_toEndOf="@+id/tv_tempMax"
+            android:text="@string/minima"/>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

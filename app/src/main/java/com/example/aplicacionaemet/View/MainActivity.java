@@ -1,10 +1,7 @@
 package com.example.aplicacionaemet.View;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -34,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String municipio;
 
+    private EditText editText;
+
     private static MainActivity myActiveActivity;
 
     @Override
@@ -41,7 +40,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setupSpinner();
+        spinner = findViewById(R.id.spinner);
+
+        stringArray = getResources().getStringArray(R.array.localidades_data);
+
+        MainController.getSingleton().setupSpinner(spinner,stringArray,this);
+
+        editText = findViewById(R.id.editText);
 
         mRecyclerView = findViewById(R.id.rv_tiempo);
 
@@ -51,7 +56,11 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        MainController.getSingleton().itemSelected(spinner,stringArray);
+
+        MainController.getSingleton().editTextFiltro(editText, stringArray, spinner);
+
+        /*spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 stringArray = getResources().getStringArray(R.array.localidades_data);
@@ -70,12 +79,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+         */
+
 
         MainActivity.myActiveActivity = this;
         MainController.setActivity(this);
     }
 
-    private void setupSpinner() {
+    /*private void setupSpinner() {
         spinner = findViewById(R.id.spinner);
         stringArray = getResources().getStringArray(R.array.localidades_data);
         String[] localidadesArray = new String[stringArray.length];
@@ -89,6 +100,10 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
     }
+
+     */
+
+
 
     public void accessData() {
 

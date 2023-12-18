@@ -7,7 +7,6 @@ import androidx.annotation.RequiresApi;
 import com.example.aplicacionaemet.Model.Tiempo;
 import com.example.aplicacionaemet.R;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

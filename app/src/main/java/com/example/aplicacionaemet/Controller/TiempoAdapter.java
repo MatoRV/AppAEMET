@@ -35,9 +35,9 @@ public class TiempoAdapter extends RecyclerView.Adapter<TiempoViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull TiempoViewHolder holder, int position) {
         holder.setIvTiempo(this.mList.get(position).getTiempo());
-        holder.setTvDia(this.mList.get(position).getDia());
-        holder.setTvMax(this.mList.get(position).getTempMax());
-        holder.setTvMin(this.mList.get(position).getTempMin());
+        holder.setTvDia(this.mList.get(position).getDia().toUpperCase());
+        holder.setTvMax("Max: " + this.mList.get(position).getTempMax() + "ºC");
+        holder.setTvMin("Min: " + this.mList.get(position).getTempMin() + "ºC");
     }
 
     @Override
