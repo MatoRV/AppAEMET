@@ -2,6 +2,7 @@ package com.example.aplicacionaemet.Controller;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -28,22 +29,23 @@ public class Peticion {
         Request peticion = new Request.Builder()
                 .url(URL + municipio + API_KEY)
                 .get()
-                .addHeader("cache-control","no-cache")
+                .addHeader("cache-control", "no-cache")
                 .build();
         // Realiza una llamada al sercer, pero en otro thread
         Call llamada = cliente.newCall(peticion);
-
+        Log.d("Peticion","Url del requestData: "+peticion.url());
         llamada.enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 String respuesta = e.getMessage();
+                Log.d("Peticion","Respuesta Failure: "+respuesta);
                 Handler manejador = new Handler(Looper.getMainLooper());
 
                 manejador.post(new Runnable() {
                     @Override
                     public void run() {
                         MainController.getSingleton().setDataFromHttp("");
-                        MainController.getSingleton().setErrorFromHttp(respuesta);
+                        MainController.getSingleton().setErrorFromHttp("Error" + respuesta);
                     }
                 });
             }
@@ -57,9 +59,52 @@ public class Peticion {
                     @Override
                     public void run() {
                         MainController.getSingleton().setDataFromHttp(respuesta);
+                        MainController.getSingleton().requestTiempoData(MainController.getSingleton().getDataFromHttp());
                     }
                 });
             }
         });
     }
+
+    public void requestDataTiempo(String URL) {
+        Log.d("Peticion","Url: "+URL);
+        OkHttpClient cliente = new OkHttpClient();
+        Request peticion = new Request.Builder()
+                .url(URL)
+                .get()
+                .addHeader("cache-control","no-cache")
+                .build();
+        Call llamada = cliente.newCall(peticion);
+        llamada.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                String respuesta = e.getMessage();
+                Handler manejador = new Handler(Looper.getMainLooper());
+                manejador.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        MainController.getSingleton().setTiempoData(respuesta);
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String respuesta = response.body().string();
+                Handler manejador = new Handler(Looper.getMainLooper());
+                manejador.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        MainController.getSingleton().setTiempoData(respuesta);
+                    }
+                });
+            }
+        });
+    }
+
+
+
+
+
+
 }

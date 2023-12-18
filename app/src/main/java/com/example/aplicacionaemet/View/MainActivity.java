@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String[] stringArray;
 
+    private String municipio;
+
     private static MainActivity myActiveActivity;
 
     @Override
@@ -52,25 +55,23 @@ public class MainActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String seleccionado = (String) spinner.getItemAtPosition(position);
                 stringArray = getResources().getStringArray(R.array.localidades_data);
-                String cp,cm,municipio = null;
-                for (int i = 0; i < stringArray.length; i++) {
-                    if (stringArray[i].split(";")[3].equals(seleccionado)) {
-                        cp = stringArray[i].split(";")[1];
-                        cm = stringArray[i].split(";")[2];
-                        municipio = cp + cm;
-                        break;
-                    }
-                }
+                String cp,cm;
+                cp = stringArray[position].split(";")[1];
+                cm = stringArray[position].split(";")[2];
+                municipio = cp + cm;
+                Log.d("Peticion","Municipio en Main: "+municipio);
                 MainController.getSingleton().requestDataFromHttp(municipio);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+                MainController.getSingleton().requestDataFromHttp(municipio);
 
             }
         });
+        //MainController.getSingleton().requestTiempoData(MainController.getSingleton().getDataFromHttp());
+
 
         MainActivity.myActiveActivity = this;
         MainController.setActivity(this);
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void accessData() {
 
-        /*List<Tiempo> lista = MainController.getSingleton().getDataFromHttp();
+        List<Tiempo> lista = MainController.getSingleton().getDataRequested();
 
         mList.clear();
         for (Tiempo tiempo : lista) {
@@ -101,8 +102,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mAdapter.notifyDataSetChanged();
-
-         */
         TextView tv = (TextView) findViewById(R.id.tv_municipio);
         tv.setText(MainController.getSingleton().getDataFromHttp());
     }

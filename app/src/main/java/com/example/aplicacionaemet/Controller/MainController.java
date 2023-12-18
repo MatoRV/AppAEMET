@@ -1,5 +1,7 @@
 package com.example.aplicacionaemet.Controller;
 
+import android.util.Log;
+
 import com.example.aplicacionaemet.Model.Tiempo;
 import com.example.aplicacionaemet.View.MainActivity;
 
@@ -29,21 +31,40 @@ public class MainController {
         return mySingleController;
     }
 
-    // Envia los datos al View
+    // Devuelve el enlace
     public String getDataFromHttp() {
+        Log.d("Peticion","Enlace: "+enlace);
         return this.enlace;
     }
 
-    // Es llamado en el View
+    public List<Tiempo> getDataRequested() {
+        return this.dataRequested;
+    }
+
+    // Es llamado en el View y trae la id del municipio
     public void requestDataFromHttp(String municipio) {
         Peticion p = new Peticion();
+        Log.d("Peticion","Municipio: "+municipio);
         p.requestData(URL, municipio);
+    }
+
+    public void requestTiempoData(String Url) {
+        Log.d("Peticion","Url tiempo: "+Url);
+        Peticion p = new Peticion();
+        p.requestDataTiempo(Url);
     }
 
     // Es llamado cuando onResponse está correcto
     public void setDataFromHttp(String json) {
         Respuesta r = new Respuesta(json);
+        Log.d("Peticion","JSON setDataFromHttp: "+json);
         enlace = r.getUrlData();
+        MainController.activeActivity.accessData();
+    }
+
+    public void setTiempoData(String json) {
+        Respuesta r = new Respuesta(json);
+        dataRequested = r.getTiempoData();
         MainController.activeActivity.accessData();
     }
 

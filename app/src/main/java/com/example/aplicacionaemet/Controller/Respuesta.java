@@ -1,6 +1,7 @@
 package com.example.aplicacionaemet.Controller;
 
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.example.aplicacionaemet.Model.Tiempo;
 import com.example.aplicacionaemet.R;
@@ -21,20 +22,22 @@ public class Respuesta {
     }
 
     public String getUrlData() {
+        /*
+        ObjectMapper crea un objeto que es un mapa de un json
 
+        jsonNode para leer el json
+        y con .get obtienes el texto
+         */
         String datosEnlace = null;
-
         // Parsea el JSON a un objeto JsonObject
         JsonObject jsonObject = JsonParser.parseString(this.datos).getAsJsonObject();
-
         // Obtiene el elemento datos
         JsonElement datosElm = jsonObject.get("datos");
-
         // Verifica si es distinto de nulo
         if (datosElm != null) {
             datosEnlace = datosElm.getAsString();
         }
-
+        Log.d("Peticion","Resultado json: "+datosEnlace);
         return datosEnlace;
     }
 
@@ -48,12 +51,11 @@ public class Respuesta {
 
         JsonElement jsonElement = JsonParser.parseString(this.datos);
 
-        JsonObject jsonObject = jsonElement.getAsJsonObject().get("prediccion").getAsJsonObject();
+        JsonArray json = jsonElement.getAsJsonArray().get(0).getAsJsonArray();
 
-        JsonArray diasArray = jsonObject.getAsJsonArray("dia");
+        //JsonArray diasArray = jsonObject.getAsJsonArray("dia");
 
-        for (JsonElement dia : diasArray) {
-
+        for (JsonElement dia : json) {
 
 
             int imgTiempo = 0;
@@ -86,7 +88,7 @@ public class Respuesta {
             } else {
                 imgTiempo = R.drawable.weather_lightning_rainy;
             }
-            dataList.add(new Tiempo(imgTiempo,fecha,tempMax,tempMin));
+            dataList.add(new Tiempo(imgTiempo, fecha, tempMax, tempMin));
         }
 
         return dataList;
