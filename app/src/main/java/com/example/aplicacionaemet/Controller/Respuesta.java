@@ -1,14 +1,21 @@
 package com.example.aplicacionaemet.Controller;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.example.aplicacionaemet.Model.Tiempo;
 import com.example.aplicacionaemet.R;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 public class Respuesta {
 
@@ -18,73 +25,69 @@ public class Respuesta {
         datos = entrada;
     }
 
-    public String getUrlData() {
-        
-        String datosEnlace = null;
+    public String getUrlData() throws JsonProcessingException {
 
-        // Parsea el JSON a un objeto JsonObject
-        JsonObject jsonObject = JsonParser.parseString(this.datos).getAsJsonObject();
+        String datosEnlace;
 
-        // Obtiene el elemento datos
-        JsonElement datosElm = jsonObject.get("datos");
-        
-        // Verifica si es distinto de nulo
-        if (datosElm != null) {
-            datosEnlace = datosElm.getAsString();
-        }
-        
+        ObjectMapper om = new ObjectMapper();
+
+        JsonNode node = om.readTree(this.datos);
+
+        datosEnlace = node.get("datos").asText();
+
         return datosEnlace;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public List<Tiempo> getTiempoData() {
-
-        String valorCielo = "0";
-        String tempMax = "0";
-        String tempMin = "0";
 
         LinkedList<Tiempo> dataList = new LinkedList<>();
 
-        JsonElement jsonElement = JsonParser.parseString(getUrlData());
+        try {
+            DateTimeFormatter fechaRespuesta = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+            DateTimeFormatter fechaADevolver = DateTimeFormatter.ofPattern("EEEE", new Locale("es", "ES"));
 
-        JsonObject jsonObject = jsonElement.getAsJsonObject().get("prediccion").getAsJsonObject();
+            ObjectMapper om = new ObjectMapper();
+            JsonNode node = om.readTree(this.datos);
 
-        JsonArray diasArray = jsonObject.getAsJsonArray("dia");
+            JsonNode pronostico = node.get(0);
+            JsonNode dias = pronostico.get("prediccion").get("dia");
 
-        for (JsonElement dia : diasArray) {
+            for (JsonNode dia : dias) {
+                String obtenerFecha = dia.get("fecha").asText();
+                LocalDate fechaObtenida = LocalDate.parse(obtenerFecha, fechaRespuesta);
+                String fecha = fechaADevolver.format(fechaObtenida);
+
+                String estadoCielo = "";
+
+                JsonNode estadoCieloValor = dia.get("estadoCielo");
+                if (estadoCieloValor.isArray() && estadoCieloValor.size() > 0) {
+                    estadoCielo = estadoCieloValor.get(0).get("value").asText();
+                }
+
+                String tempMax = dia.get("temperatura").get("maxima").asText();
+                String tempMin = dia.get("temperatura").get("minima").asText();
+
+                int imgTiempo;
+                if (estadoCielo.equals("0") || estadoCielo.equals("")) {
+                    imgTiempo = R.drawable.weather_sunny;
+                } else if (Integer.parseInt(estadoCielo) > 11 && Integer.parseInt(estadoCielo) <= 16) {
+                    imgTiempo = R.drawable.weather_partly_cloudy;
+                } else if (Integer.parseInt(estadoCielo) > 16 && Integer.parseInt(estadoCielo) <= 24) {
+                    imgTiempo = R.drawable.weather_cloudy;
+                } else if (Integer.parseInt(estadoCielo) > 24 && Integer.parseInt(estadoCielo) <= 43) {
+                    imgTiempo = R.drawable.weather_rainy;
+                } else if (Integer.parseInt(estadoCielo) > 43 && Integer.parseInt(estadoCielo) <= 65) {
+                    imgTiempo = R.drawable.weather_pouring;
+                } else {
+                    imgTiempo = R.drawable.weather_lightning_rainy;
+                }
 
 
-
-            int imgTiempo = 0;
-            // Obtiene estadoCielo
-            JsonArray estadoCieloArray = dia.getAsJsonObject().getAsJsonArray("estadoCielo");
-            JsonArray temperaturaArray = dia.getAsJsonObject().getAsJsonArray("temperatura");
-            String fecha = dia.getAsJsonObject().get("fecha").getAsString();
-            if (estadoCieloArray.size() > 0) {
-                JsonObject estadoCielo = estadoCieloArray.get(0).getAsJsonObject();
-                valorCielo = estadoCielo.get("value").getAsString();
+                dataList.add(new Tiempo(imgTiempo,fecha,tempMax,tempMin));
             }
-
-            if (temperaturaArray.size() > 0) {
-                JsonObject temperaturaMax = temperaturaArray.get(0).getAsJsonObject();
-                JsonObject temperaturaMin = temperaturaArray.get(1).getAsJsonObject();
-                tempMax = temperaturaMax.get("maxima").getAsString();
-                tempMin = temperaturaMin.get("minima").getAsString();
-            }
-
-            if (Integer.parseInt(valorCielo) == 0) {
-                imgTiempo = R.drawable.weather_sunny;
-            } else if (Integer.parseInt(valorCielo) > 11 && Integer.parseInt(valorCielo) <= 16) {
-                imgTiempo = R.drawable.weather_partly_cloudy;
-            } else if (Integer.parseInt(valorCielo) > 16 && Integer.parseInt(valorCielo) <= 24) {
-                imgTiempo = R.drawable.weather_cloudy;
-            } else if (Integer.parseInt(valorCielo) > 24 && Integer.parseInt(valorCielo) <= 43) {
-                imgTiempo = R.drawable.weather_rainy;
-            } else if (Integer.parseInt(valorCielo) > 43 && Integer.parseInt(valorCielo) <= 65) {
-                imgTiempo = R.drawable.weather_pouring;
-            } else {
-                imgTiempo = R.drawable.weather_lightning_rainy;
-            }
-            dataList.add(new Tiempo(imgTiempo,fecha,tempMax,tempMin));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
 
         return dataList;

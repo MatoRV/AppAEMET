@@ -34,8 +34,13 @@ android {
 dependencies {
 
     implementation("com.squareup.okhttp3:okhttp:4.9.1")
+    implementation("com.squareup.okhttp3:okhttp-urlconnection:4.9.1")
 
-    implementation("com.google.code.gson:gson:2.8.9")
+
+
+    implementation("com.google.code.gson:gson:2.10")
+
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.12.4")
 
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")

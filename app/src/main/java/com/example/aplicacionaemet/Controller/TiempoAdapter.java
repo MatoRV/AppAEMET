@@ -24,7 +24,6 @@ public class TiempoAdapter extends RecyclerView.Adapter<TiempoViewHolder> {
         this.mList = list;
     }
 
-
     @NonNull
     @Override
     public TiempoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
