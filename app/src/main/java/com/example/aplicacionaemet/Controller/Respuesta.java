@@ -1,7 +1,5 @@
 package com.example.aplicacionaemet.Controller;
 
-import android.graphics.drawable.Drawable;
-
 import com.example.aplicacionaemet.Model.Tiempo;
 import com.example.aplicacionaemet.R;
 import com.google.gson.JsonArray;
