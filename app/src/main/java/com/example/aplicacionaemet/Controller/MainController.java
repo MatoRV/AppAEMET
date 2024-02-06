@@ -26,6 +26,8 @@ public class MainController {
 
     private List<Tiempo> dataRequested;
 
+    private TiempoListViewModel myViewModel;
+
     private String enlace;
 
     private static MainActivity activeActivity;
@@ -74,7 +76,9 @@ public class MainController {
                 }
                 textView.setText(seleccion);
                 municipio = cp + cm;
-                requestDataFromHttp(municipio);
+                TiempoListViewModel tp = new TiempoListViewModel();
+                tp.setMunicipio(municipio);
+                //requestDataFromHttp(municipio);
             }
 
             @Override
@@ -133,13 +137,11 @@ public class MainController {
     }
 
     // Es llamado en el View y trae la id del municipio
-    public void requestDataFromHttp(String municipio) {
+    public void requestDataFromHttp(String municipio, TiempoListViewModel myViewModel) {
         Peticion p = new Peticion();
-        if (municipio != null) {
-            p.requestData(URL, municipio);
-        }
-        Log.d("Peticion","Municipio: "+municipio);
+        p.requestData(URL, municipio);
 
+        this.myViewModel = myViewModel;
     }
 
     public void requestTiempoData(String Url) {
@@ -168,5 +170,9 @@ public class MainController {
 
     public static void setActivity(MainActivity myAct) {
         activeActivity = myAct;
+    }
+
+    public List<Tiempo> getList() {
+        return this.dataRequested;
     }
 }
