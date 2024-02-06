@@ -161,7 +161,7 @@ public class MainController {
     public void setTiempoData(String json) {
         Respuesta r = new Respuesta(json);
         dataRequested = r.getTiempoData();
-        MainController.activeActivity.accessData();
+        if (myViewModel != null) myViewModel.setData(dataRequested);
     }
 
     public void setErrorFromHttp(String error) {

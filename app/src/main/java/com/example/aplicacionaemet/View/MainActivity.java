@@ -6,11 +6,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aplicacionaemet.Controller.MainController;
 import com.example.aplicacionaemet.Controller.TiempoAdapter;
+import com.example.aplicacionaemet.Controller.TiempoListViewModel;
 import com.example.aplicacionaemet.Model.Tiempo;
 import com.example.aplicacionaemet.R;
 
@@ -48,13 +50,15 @@ public class MainActivity extends AppCompatActivity {
 
         editText = findViewById(R.id.editText);
 
-        mRecyclerView = findViewById(R.id.rv_tiempo);
+        TiempoListViewModel vmodel = new ViewModelProvider(this).get(TiempoListViewModel.class);
+        vmodel.getTiempos().observe(this, tiempos -> {
 
-        mAdapter = new TiempoAdapter(this, mList);
-
-        mRecyclerView.setAdapter(mAdapter);
-
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            //update UI
+            mRecyclerView = findViewById(R.id.rv_tiempo);
+            mAdapter = new TiempoAdapter(this, mList);
+            mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        });
 
         textView = findViewById(R.id.tv_municipio);
 
